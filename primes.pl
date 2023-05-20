@@ -38,11 +38,7 @@ is_min(N, H) :- composite(N),
 
 check(I, N, H) :- prime(I),
                   H is I,
-                  0 is mod(N, I),check(I, N, H) :- 
-                  I1 is I + 1,
-                  I1 =< N,
-                  check(I1, N, H),
-                  !.
+                  0 is mod(N, I),
                   !.
 check(I, N, H) :- not(0 is mod(N, I)),
                   not(prime),
@@ -53,8 +49,7 @@ check(I, N, H) :- not(0 is mod(N, I)),
 
 compact_prime_divisors(N, H) :- prime_divisors(N, H1), compact(H1, H).
 
-compact([], []) :- !.
-compact([], [[A, B]]) :- B = 0, !.
-compact([H | T], [[A, B] | T1]) :- H = A, B > 0, B1 is B - 1, compact(T, [[A, B1], T1]).
-compact([H | T], [[A, B] | T1]) :- not (H = A), B = 0, compact([H | T], T1).
-
+compact([], [], _) :- !.
+compact(T, T1) :- compact(T, T1, 1).
+compact([H | T], [[A, 1] | T1], X) :- A > X, H > 1, A is H, compact(T, T1, A).
+compact([H | T], [[A, B] | T1], X) :- A > X, H > 1, A is H, B > 1, B1 is B - 1, compact(T, [[A, B1] | T1], X).
